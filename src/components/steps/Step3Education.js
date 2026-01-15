@@ -2,11 +2,25 @@ import React, { useState } from 'react';
 import Icon from '../Icon';
 import { suggestSkills, getAIUsesRemaining, canUseAI } from '../../services/aiService';
 
+// Sugerencias rápidas predefinidas
+const QUICK_SKILLS = {
+  tecnicas: [
+    'JavaScript', 'Python', 'React', 'Node.js', 'SQL', 'Excel', 'Git', 
+    'TypeScript', 'Java', 'HTML/CSS', 'AWS', 'Docker', 'MongoDB', 'Power BI'
+  ],
+  blandas: [
+    'Liderazgo', 'Trabajo en equipo', 'Comunicación', 'Resolución de problemas',
+    'Adaptabilidad', 'Gestión del tiempo', 'Creatividad', 'Pensamiento crítico'
+  ]
+};
+
 const Step3Education = ({ data, onChange }) => {
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [aiError, setAiError] = useState('');
   const [aiSuccess, setAiSuccess] = useState('');
   const [usesRemaining, setUsesRemaining] = useState(getAIUsesRemaining());
+  const [newSkillTecnica, setNewSkillTecnica] = useState('');
+  const [newSkillBlanda, setNewSkillBlanda] = useState('');
   // Educacion
   const updateEducacion = (index, field, value) => {
     const newEdu = [...data.educacion];
@@ -41,6 +55,39 @@ const Step3Education = ({ data, onChange }) => {
       ...data,
       habilidades: { ...data.habilidades, [tipo]: skills }
     });
+  };
+
+  // Agregar una habilidad individual
+  const addSkill = (tipo, skill) => {
+    const trimmedSkill = skill.trim();
+    if (!trimmedSkill) return;
+    
+    const currentSkills = data.habilidades[tipo] || [];
+    // Evitar duplicados (case insensitive)
+    if (currentSkills.some(s => s.toLowerCase() === trimmedSkill.toLowerCase())) return;
+    
+    onChange({
+      ...data,
+      habilidades: { ...data.habilidades, [tipo]: [...currentSkills, trimmedSkill] }
+    });
+  };
+
+  // Eliminar una habilidad
+  const removeSkill = (tipo, index) => {
+    const newSkills = data.habilidades[tipo].filter((_, i) => i !== index);
+    onChange({
+      ...data,
+      habilidades: { ...data.habilidades, [tipo]: newSkills }
+    });
+  };
+
+  // Manejar Enter en input de habilidades
+  const handleSkillKeyDown = (e, tipo, value, setValue) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addSkill(tipo, value);
+      setValue('');
+    }
   };
 
   // Idiomas
@@ -295,35 +342,135 @@ const Step3Education = ({ data, onChange }) => {
             {aiSuccess && <div className="ai-success">{aiSuccess}</div>}
           </div>
 
+          {/* Habilidades Técnicas */}
           <div className="form-group">
-            <label>Habilidades tecnicas</label>
-            <input
-              type="text"
-              value={data.habilidades.tecnicas.join(', ')}
-              onChange={(e) => updateHabilidades('tecnicas', e.target.value)}
-              placeholder="JavaScript, React, Node.js, Python, SQL, Git..."
-              className="input-modern"
-            />
-            <div className="skills-preview">
+            <label>Habilidades técnicas</label>
+            <div className="skill-input-wrapper">
+              <input
+                type="text"
+                value={newSkillTecnica}
+                onChange={(e) => setNewSkillTecnica(e.target.value)}
+                onKeyDown={(e) => handleSkillKeyDown(e, 'tecnicas', newSkillTecnica, setNewSkillTecnica)}
+                placeholder="Escribe y presiona Enter para agregar..."
+                className="input-modern"
+              />
+              <button
+                type="button"
+                className="btn-add-skill"
+                onClick={() => {
+                  addSkill('tecnicas', newSkillTecnica);
+                  setNewSkillTecnica('');
+                }}
+                disabled={!newSkillTecnica.trim()}
+              >
+                <Icon name="plus" size={16} />
+              </button>
+            </div>
+            
+            {/* Tags de habilidades actuales */}
+            <div className="skills-tags-container">
               {data.habilidades.tecnicas.map((skill, i) => (
-                <span key={i} className="skill-tag technical">{skill}</span>
+                <span key={i} className="skill-tag technical removable">
+                  {skill}
+                  <button
+                    type="button"
+                    className="skill-remove-btn"
+                    onClick={() => removeSkill('tecnicas', i)}
+                    title="Eliminar"
+                  >
+                    <Icon name="x" size={12} />
+                  </button>
+                </span>
               ))}
+              {data.habilidades.tecnicas.length === 0 && (
+                <span className="skills-empty">Agrega habilidades técnicas...</span>
+              )}
+            </div>
+
+            {/* Sugerencias rápidas */}
+            <div className="quick-skills">
+              <span className="quick-skills-label">Sugerencias:</span>
+              <div className="quick-skills-list">
+                {QUICK_SKILLS.tecnicas
+                  .filter(s => !data.habilidades.tecnicas.some(t => t.toLowerCase() === s.toLowerCase()))
+                  .slice(0, 6)
+                  .map((skill, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className="quick-skill-btn"
+                      onClick={() => addSkill('tecnicas', skill)}
+                    >
+                      + {skill}
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
 
+          {/* Habilidades Blandas */}
           <div className="form-group">
             <label>Habilidades blandas</label>
-            <input
-              type="text"
-              value={data.habilidades.blandas.join(', ')}
-              onChange={(e) => updateHabilidades('blandas', e.target.value)}
-              placeholder="Liderazgo, Trabajo en equipo, Comunicacion..."
-              className="input-modern"
-            />
-            <div className="skills-preview">
+            <div className="skill-input-wrapper">
+              <input
+                type="text"
+                value={newSkillBlanda}
+                onChange={(e) => setNewSkillBlanda(e.target.value)}
+                onKeyDown={(e) => handleSkillKeyDown(e, 'blandas', newSkillBlanda, setNewSkillBlanda)}
+                placeholder="Escribe y presiona Enter para agregar..."
+                className="input-modern"
+              />
+              <button
+                type="button"
+                className="btn-add-skill"
+                onClick={() => {
+                  addSkill('blandas', newSkillBlanda);
+                  setNewSkillBlanda('');
+                }}
+                disabled={!newSkillBlanda.trim()}
+              >
+                <Icon name="plus" size={16} />
+              </button>
+            </div>
+            
+            {/* Tags de habilidades actuales */}
+            <div className="skills-tags-container">
               {data.habilidades.blandas.map((skill, i) => (
-                <span key={i} className="skill-tag soft">{skill}</span>
+                <span key={i} className="skill-tag soft removable">
+                  {skill}
+                  <button
+                    type="button"
+                    className="skill-remove-btn"
+                    onClick={() => removeSkill('blandas', i)}
+                    title="Eliminar"
+                  >
+                    <Icon name="x" size={12} />
+                  </button>
+                </span>
               ))}
+              {data.habilidades.blandas.length === 0 && (
+                <span className="skills-empty">Agrega habilidades blandas...</span>
+              )}
+            </div>
+
+            {/* Sugerencias rápidas */}
+            <div className="quick-skills">
+              <span className="quick-skills-label">Sugerencias:</span>
+              <div className="quick-skills-list">
+                {QUICK_SKILLS.blandas
+                  .filter(s => !data.habilidades.blandas.some(t => t.toLowerCase() === s.toLowerCase()))
+                  .slice(0, 5)
+                  .map((skill, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className="quick-skill-btn soft"
+                      onClick={() => addSkill('blandas', skill)}
+                    >
+                      + {skill}
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
