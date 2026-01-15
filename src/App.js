@@ -259,32 +259,57 @@ function CVBuilder() {
 
         {/* CV PREVIEW PANEL */}
         <div className="preview-panel">
-          <div className="preview-toolbar">
-            <button
-              className="preview-zoom-btn"
-              onClick={() => handleZoom(-zoomStep)}
-              disabled={previewZoom <= zoomMin}
-              title="Alejar"
-            >
-              <Icon name="minus" size={16} />
-            </button>
-            <button
-              className="preview-zoom-value"
-              onClick={resetZoom}
-              title="Restablecer a 100%"
-            >
-              {previewZoom}%
-            </button>
-            <button
-              className="preview-zoom-btn"
-              onClick={() => handleZoom(zoomStep)}
-              disabled={previewZoom >= zoomMax}
-              title="Acercar"
-            >
-              <Icon name="plus" size={16} />
-            </button>
+          <div className="preview-header">
+            <div className="preview-title">
+              <Icon name="eye" size={18} />
+              <span>Vista previa</span>
+            </div>
+            <div className="preview-template-badge">
+              {selectedTemplate === 'classic' && '📄 Clásico'}
+              {selectedTemplate === 'modern' && '✨ Moderno'}
+              {selectedTemplate === 'minimal' && '◻️ Minimalista'}
+            </div>
           </div>
+          
+          <div className="preview-toolbar">
+            <div className="zoom-controls">
+              <button
+                className="preview-zoom-btn"
+                onClick={() => handleZoom(-zoomStep)}
+                disabled={previewZoom <= zoomMin}
+                title="Alejar"
+              >
+                <Icon name="minus" size={14} />
+              </button>
+              <button
+                className="preview-zoom-value"
+                onClick={resetZoom}
+                title="Restablecer a 100%"
+              >
+                {previewZoom}%
+              </button>
+              <button
+                className="preview-zoom-btn"
+                onClick={() => handleZoom(zoomStep)}
+                disabled={previewZoom >= zoomMax}
+                title="Acercar"
+              >
+                <Icon name="plus" size={14} />
+              </button>
+            </div>
+            {isPaid && (
+              <button className="preview-download-btn" onClick={downloadPDF} title="Descargar PDF">
+                <Icon name="download" size={14} />
+                <span>Descargar</span>
+              </button>
+            )}
+          </div>
+
           <div className="preview-container">
+            <div className="preview-page-indicator">
+              <Icon name="document" size={12} />
+              <span>Página 1 de 1</span>
+            </div>
             <div
               className="cv-preview-wrapper"
               style={{ transform: `scale(${previewZoom / 100})` }}
@@ -297,6 +322,13 @@ function CVBuilder() {
               >
                 {previewDocument}
               </PDFViewer>
+            </div>
+          </div>
+
+          <div className="preview-footer">
+            <div className="preview-tip">
+              <Icon name="lightbulb" size={14} />
+              <span>Los cambios se reflejan en tiempo real</span>
             </div>
           </div>
         </div>
