@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Icon from '../Icon';
+import { suggestSkills, getAIUsesRemaining, canUseAI } from '../../services/aiService';
 
 const Step3Education = ({ data, onChange }) => {
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [aiError, setAiError] = useState('');
+  const [aiSuccess, setAiSuccess] = useState('');
+  const [usesRemaining, setUsesRemaining] = useState(getAIUsesRemaining());
   // Educacion
   const updateEducacion = (index, field, value) => {
     const newEdu = [...data.educacion];
@@ -80,6 +85,47 @@ const Step3Education = ({ data, onChange }) => {
   const removeCertificacion = (index) => {
     const newCert = data.certificaciones.filter((_, i) => i !== index);
     onChange({ ...data, certificaciones: newCert });
+  };
+
+  // Sugerir habilidades con IA
+  const handleSuggestSkills = async () => {
+    if (!canUseAI()) {
+      setAiError('Has alcanzado el límite de 5 sugerencias diarias. Vuelve mañana.');
+      return;
+    }
+
+    setIsLoadingAI(true);
+    setAiError('');
+    setAiSuccess('');
+
+    try {
+      const result = await suggestSkills(data);
+      
+      // Combinar habilidades existentes con las sugeridas (sin duplicados)
+      const currentTecnicas = data.habilidades.tecnicas || [];
+      const currentBlandas = data.habilidades.blandas || [];
+      
+      const newTecnicas = [...new Set([...currentTecnicas, ...result.tecnicas])];
+      const newBlandas = [...new Set([...currentBlandas, ...result.blandas])];
+      
+      onChange({
+        ...data,
+        habilidades: {
+          tecnicas: newTecnicas,
+          blandas: newBlandas
+        }
+      });
+
+      setUsesRemaining(result.usesRemaining);
+      setAiSuccess(`¡Sugerencias añadidas! Te quedan ${result.usesRemaining} usos hoy.`);
+      
+      setTimeout(() => setAiSuccess(''), 5000);
+    } catch (error) {
+      setAiError(error.message);
+      setTimeout(() => setAiError(''), 5000);
+    } finally {
+      setIsLoadingAI(false);
+    }
   };
 
   return (
@@ -213,6 +259,42 @@ const Step3Education = ({ data, onChange }) => {
         </div>
 
         <div className="form-card">
+          {/* Botón de sugerencia IA */}
+          <div className="ai-suggestion-box">
+            <div className="ai-suggestion-header">
+              <div className="ai-badge">
+                <Icon name="sparkles" size={16} />
+                <span>Sugerencia IA</span>
+              </div>
+              <span className="ai-uses-badge">
+                {usesRemaining} usos restantes hoy
+              </span>
+            </div>
+            <p className="ai-description">
+              Genera habilidades personalizadas basadas en tu experiencia y educación.
+            </p>
+            <button
+              type="button"
+              className={`btn-ai-suggest ${isLoadingAI ? 'loading' : ''}`}
+              onClick={handleSuggestSkills}
+              disabled={isLoadingAI || !canUseAI()}
+            >
+              {isLoadingAI ? (
+                <>
+                  <span className="spinner-small"></span>
+                  Generando...
+                </>
+              ) : (
+                <>
+                  <Icon name="sparkles" size={16} />
+                  Sugerir habilidades con IA
+                </>
+              )}
+            </button>
+            {aiError && <div className="ai-error">{aiError}</div>}
+            {aiSuccess && <div className="ai-success">{aiSuccess}</div>}
+          </div>
+
           <div className="form-group">
             <label>Habilidades tecnicas</label>
             <input

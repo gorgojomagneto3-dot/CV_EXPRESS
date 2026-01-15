@@ -235,6 +235,13 @@ const icons = {
     </>
   ),
   zap: <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />,
+  sparkles: (
+    <>
+      <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
+      <path d="M19 13l.75 2.25L22 16l-2.25.75L19 19l-.75-2.25L16 16l2.25-.75L19 13z" />
+      <path d="M5 17l.5 1.5L7 19l-1.5.5L5 21l-.5-1.5L3 19l1.5-.5L5 17z" />
+    </>
+  ),
 };
 
 const Icon = ({ name, size = 20, className = '', ...props }) => {
