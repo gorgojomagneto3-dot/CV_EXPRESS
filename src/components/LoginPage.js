@@ -123,7 +123,7 @@ const LoginPage = () => {
                   onError={handleGoogleError}
                   theme="outline"
                   size="large"
-                  width="360"
+                  width="280"
                   text="continue_with"
                   shape="rectangular"
                   ux_mode="popup"
