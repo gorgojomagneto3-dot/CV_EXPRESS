@@ -41,6 +41,17 @@ router.post('/auth', async (req, res) => {
     // Enviar notificación a n8n
     await n8nService.notifyLogin({ ...user.toObject(), isNewUser });
 
+    // Verificar si el premium sigue activo
+    const isPremiumActive = user.isPremiumActive ? user.isPremiumActive() : false;
+    const daysRemaining = user.getDaysRemaining ? user.getDaysRemaining() : 0;
+
+    // Si el premium expiró, actualizar el estado
+    if (user.isPremium && !isPremiumActive) {
+      user.isPremium = false;
+      user.hasPaid = false;
+      await user.save();
+    }
+
     res.json({
       success: true,
       user: {
@@ -49,6 +60,9 @@ router.post('/auth', async (req, res) => {
         name: user.name,
         picture: user.picture,
         hasPaid: user.hasPaid,
+        isPremium: isPremiumActive,
+        premiumExpiresAt: user.premiumExpiresAt,
+        daysRemaining: daysRemaining,
         cvData: user.cvData
       },
       isNewUser

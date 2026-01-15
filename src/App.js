@@ -24,13 +24,13 @@ const navItems = [
 ];
 
 function CVBuilder() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUserPaymentStatus } = useAuth();
   const [cvData, setCvData] = useState(defaultData);
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState('classic');
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [isPaid, setIsPaid] = useState(false);
+  const [isPaid, setIsPaid] = useState(user?.isPremium || false);
   const [previewZoom, setPreviewZoom] = useState(100);
   const [previewData, setPreviewData] = useState(defaultData);
 
@@ -82,6 +82,8 @@ function CVBuilder() {
     console.log('Pago confirmado:', operationNumber, method);
     setIsPaid(true);
     setShowPaymentModal(false);
+    // Actualizar estado de premium del usuario
+    updateUserPaymentStatus();
     // Descargar PDF automáticamente después del pago
     await downloadPDF();
   };
@@ -144,8 +146,16 @@ function CVBuilder() {
           <div className="header-actions">
             {user && (
               <div className="user-menu">
-                {user.picture && <img src={user.picture} alt={user.name} className="user-avatar" />}
-                <span className="user-name">{user.name?.split(' ')[0]}</span>
+                <div className={`user-avatar-wrapper ${user.isPremium ? 'premium' : ''}`}>
+                  {user.picture && <img src={user.picture} alt={user.name} className="user-avatar" />}
+                  {user.isPremium && <span className="premium-badge">⭐</span>}
+                </div>
+                <div className="user-info">
+                  <span className="user-name">{user.name?.split(' ')[0]}</span>
+                  {user.isPremium && user.daysRemaining && (
+                    <span className="premium-days">{user.daysRemaining} días restantes</span>
+                  )}
+                </div>
                 <button className="btn-logout" onClick={logout}>
                   Cerrar sesion
                 </button>

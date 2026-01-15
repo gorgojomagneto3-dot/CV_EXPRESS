@@ -40,15 +40,23 @@ router.post('/', async (req, res) => {
     });
     await payment.save();
 
-    // Actualizar usuario como pagado (validación optimista)
+    // Calcular fecha de expiración (7 días desde ahora)
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+    // Actualizar usuario como pagado y premium
     user.hasPaid = true;
+    user.isPremium = true;
+    user.paymentDate = now;
+    user.premiumExpiresAt = expiresAt;
     user.paymentId = payment._id;
     await user.save();
 
     console.log('💳 Pago registrado:', {
       user: user.email,
       operation: operationNumber,
-      method: paymentMethod
+      method: paymentMethod,
+      premiumExpiresAt: expiresAt
     });
 
     // Enviar notificación a n8n

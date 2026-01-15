@@ -36,7 +36,10 @@ export const AuthProvider = ({ children }) => {
       const userData = {
         ...response.user,
         mongoId: response.user.id,
-        token: googleUserData.token
+        token: googleUserData.token,
+        isPremium: response.user.isPremium || false,
+        daysRemaining: response.user.daysRemaining || 0,
+        premiumExpiresAt: response.user.premiumExpiresAt || null
       };
 
       setUser(userData);
@@ -52,9 +55,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const updateUserPaymentStatus = (hasPaid) => {
+  const updateUserPaymentStatus = (paymentInfo) => {
     if (user) {
-      const updatedUser = { ...user, hasPaid };
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const updatedUser = { 
+        ...user, 
+        hasPaid: true,
+        isPremium: true,
+        premiumExpiresAt: expiresAt.toISOString(),
+        daysRemaining: 7
+      };
       setUser(updatedUser);
       localStorage.setItem('cv_user', JSON.stringify(updatedUser));
     }
