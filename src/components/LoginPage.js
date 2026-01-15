@@ -131,7 +131,7 @@ const LoginPage = () => {
               </div>
             )}
             <p className="login-terms">
-              Al continuar, aceptas nuestros <a href="https://docs.google.com/document/d/e/2PACX-1vQB51fgxzSLqbZm8eJJFsGlFDHpJQPkwqjrSWkzSnnwAY6CH87cD0CFjO0jqcHgIDZKQwH6kgeFEH7N/pub">T\u00e9rminos, Condiciones y Pol\u00edtica de Privacidad</a>.
+              Al continuar, aceptas nuestros <a href="https://docs.google.com/document/d/e/2PACX-1vQB51fgxzSLqbZm8eJJFsGlFDHpJQPkwqjrSWkzSnnwAY6CH87cD0CFjO0jqcHgIDZKQwH6kgeFEH7N/pub" target="_blank" rel="noopener noreferrer">Términos, Condiciones y Política de Privacidad</a>.
             </p>
             <div className="login-illustration">
               <img

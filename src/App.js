@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { PDFViewer } from '@react-pdf/renderer';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { PDFViewer, pdf } from '@react-pdf/renderer';
 import CVDocument from './components/CVDocument';
 import Icon from './components/Icon';
 import Logo from './components/Logo';
@@ -60,10 +60,30 @@ function CVBuilder() {
     }
   };
 
-  const handlePaymentConfirm = (operationNumber, method) => {
+  const downloadPDF = useCallback(async () => {
+    try {
+      const fileName = `CV_${cvData.personalInfo.nombre || 'MiCV'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const blob = await pdf(<CVDocument data={cvData} template={selectedTemplate} />).toBlob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error descargando PDF:', error);
+      alert('Error al descargar el PDF. Intenta de nuevo.');
+    }
+  }, [cvData, selectedTemplate]);
+
+  const handlePaymentConfirm = async (operationNumber, method) => {
     console.log('Pago confirmado:', operationNumber, method);
     setIsPaid(true);
     setShowPaymentModal(false);
+    // Descargar PDF automáticamente después del pago
+    await downloadPDF();
   };
 
   useEffect(() => {
@@ -206,16 +226,22 @@ function CVBuilder() {
                   Continuar
                   <Icon name="arrow-right" size={16} />
                 </button>
+              ) : isPaid ? (
+                <button
+                  className="btn-nav btn-download"
+                  onClick={downloadPDF}
+                >
+                  <Icon name="download" size={16} />
+                  Descargar PDF
+                </button>
               ) : (
-                !isPaid && (
-                  <button
-                    className="btn-nav btn-finish"
-                    onClick={() => setShowPaymentModal(true)}
-                  >
-                    <Icon name="credit-card" size={16} />
-                    Obtener CV - S/ 0.50
-                  </button>
-                )
+                <button
+                  className="btn-nav btn-finish"
+                  onClick={() => setShowPaymentModal(true)}
+                >
+                  <Icon name="credit-card" size={16} />
+                  Obtener CV - S/ 0.50
+                </button>
               )}
             </div>
           </div>
