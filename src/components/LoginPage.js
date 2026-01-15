@@ -122,8 +122,7 @@ const LoginPage = () => {
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleError}
                   theme="outline"
-                  size="large"
-                  width="280"
+                  size="medium"
                   text="continue_with"
                   shape="rectangular"
                   ux_mode="popup"
