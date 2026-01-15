@@ -265,9 +265,9 @@ function CVBuilder() {
               <span>Vista previa</span>
             </div>
             <div className="preview-template-badge">
-              {selectedTemplate === 'classic' && '📄 Clásico'}
-              {selectedTemplate === 'modern' && '✨ Moderno'}
-              {selectedTemplate === 'minimal' && '◻️ Minimalista'}
+              {selectedTemplate === 'classic' && 'Clásico'}
+              {selectedTemplate === 'modern' && 'Moderno'}
+              {selectedTemplate === 'minimal' && 'Minimalista'}
             </div>
           </div>
           
@@ -297,12 +297,6 @@ function CVBuilder() {
                 <Icon name="plus" size={14} />
               </button>
             </div>
-            {isPaid && (
-              <button className="preview-download-btn" onClick={downloadPDF} title="Descargar PDF">
-                <Icon name="download" size={14} />
-                <span>Descargar</span>
-              </button>
-            )}
           </div>
 
           <div className="preview-container">

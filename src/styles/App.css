@@ -651,7 +651,7 @@ body {
 .preview-toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 12px 20px;
   background: rgba(255, 255, 255, 0.6);
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -768,6 +768,11 @@ body {
   transform-origin: top center;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   will-change: transform;
+  /* Mejora de resolución */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .cv-preview-wrapper:hover {
@@ -780,6 +785,9 @@ body {
 .pdf-viewer {
   border: none;
   background: #ffffff;
+  /* Mejora renderizado del PDF */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .preview-footer {
