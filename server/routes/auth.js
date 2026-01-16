@@ -3,6 +3,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const User = require('../models/User');
 const n8nService = require('../services/n8nService');
+const emailService = require('../services/emailService');
 
 // POST /api/auth/register - Registrar nuevo usuario con email
 router.post('/register', async (req, res) => {
@@ -38,6 +39,9 @@ router.post('/register', async (req, res) => {
 
     // Notificar a n8n
     await n8nService.notifyLogin({ ...user.toObject(), isNewUser: true });
+
+    // Enviar email de bienvenida
+    await emailService.sendWelcome(user.email, user.name);
 
     res.status(201).json({
       success: true,
@@ -149,18 +153,17 @@ router.post('/forgot-password', async (req, res) => {
 
     console.log('🔑 Token de reset generado para:', email);
 
-    // Notificar a n8n para enviar email
-    await n8nService.notifyPasswordReset({
-      email: user.email,
-      name: user.name,
-      resetToken: resetToken
-    });
+    // Enviar email con Resend
+    const emailResult = await emailService.sendPasswordReset(user.email, user.name, resetToken);
+
+    if (!emailResult.success) {
+      console.error('❌ Error enviando email:', emailResult.error);
+      return res.status(500).json({ error: 'Error enviando email. Intenta de nuevo.' });
+    }
 
     res.json({
       success: true,
-      message: 'Se ha enviado un enlace de recuperación a tu email',
-      // En desarrollo, incluir el token (quitar en producción)
-      ...(process.env.NODE_ENV !== 'production' && { resetToken })
+      message: 'Se ha enviado un enlace de recuperación a tu email'
     });
 
   } catch (error) {

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { PDFViewer, pdf } from '@react-pdf/renderer';
 import CVDocument from './components/CVDocument';
 import Icon from './components/Icon';
@@ -10,6 +11,7 @@ import Step3Education from './components/steps/Step3Education';
 import Step4Finish from './components/steps/Step4Finish';
 import PaymentModal from './components/PaymentModal';
 import LoginPage from './components/LoginPage';
+import ResetPasswordPage from './components/ResetPasswordPage';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { cvData as defaultData } from './data/cvData';
 import './styles/App.css';
@@ -356,11 +358,14 @@ function App() {
   return isAuthenticated ? <CVBuilder /> : <LoginPage />;
 }
 
-// Wrapper with AuthProvider
+// Wrapper with AuthProvider and Routes
 function AppWrapper() {
   return (
     <AuthProvider>
-      <App />
+      <Routes>
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+        <Route path="/*" element={<App />} />
+      </Routes>
     </AuthProvider>
   );
 }
