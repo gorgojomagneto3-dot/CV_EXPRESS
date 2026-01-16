@@ -214,23 +214,34 @@ const LoginPage = () => {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <div className="login-page">
-        <div className="login-container">
-          <div className="login-card">
-            <div className="login-brand-row">
+        <div className="login-card-container">
+          {/* Panel Izquierdo - Ilustración */}
+          <div className="login-illustration-panel">
+            <img 
+              src="/login.svg" 
+              alt="Profesional con CV" 
+              className="login-illustration"
+            />
+          </div>
+
+          {/* Panel Derecho - Formulario */}
+          <div className="login-form-panel">
+            <div className="login-logo-wrapper">
               <LogoMark className="login-logo" />
-              <span className="login-hero-tag">ATS READY</span>
             </div>
 
-            <h1 className="login-title">
-              {view === 'login' && 'Inicia sesión'}
-              {view === 'register' && 'Crear cuenta'}
-              {view === 'forgot' && 'Recuperar contraseña'}
-            </h1>
-            <p className="login-subtitle">
-              {view === 'login' && 'Accede a tu cuenta de CV Express'}
-              {view === 'register' && 'Crea tu CV profesional en minutos'}
-              {view === 'forgot' && 'Te enviaremos un enlace para restablecer tu contraseña'}
-            </p>
+            <div className="login-header">
+              <h1 className="login-title">
+                {view === 'login' && 'Inicia sesión'}
+                {view === 'register' && 'Crear cuenta'}
+                {view === 'forgot' && 'Recuperar contraseña'}
+              </h1>
+              <p className="login-subtitle">
+                {view === 'login' && 'Accede a tu cuenta de CV Express'}
+                {view === 'register' && 'Crea tu CV profesional en minutos'}
+                {view === 'forgot' && 'Te enviaremos un enlace para restablecer tu contraseña'}
+              </p>
+            </div>
 
             {error && (
               <div className="login-error">
@@ -300,7 +311,6 @@ const LoginPage = () => {
                     </button>
 
                     <button type="submit" className="submit-btn">
-                      <Icon name="log-in" size={18} />
                       Iniciar sesión
                     </button>
                   </form>
@@ -372,7 +382,6 @@ const LoginPage = () => {
                     </div>
 
                     <button type="submit" className="submit-btn">
-                      <Icon name="user-plus" size={18} />
                       Crear cuenta
                     </button>
                   </form>
@@ -395,7 +404,6 @@ const LoginPage = () => {
                     </div>
 
                     <button type="submit" className="submit-btn">
-                      <Icon name="mail" size={18} />
                       Enviar instrucciones
                     </button>
 
@@ -418,14 +426,14 @@ const LoginPage = () => {
                         onSuccess={handleGoogleSuccess}
                         onError={handleGoogleError}
                         theme="outline"
-                        size="medium"
+                        size="large"
                         text="continue_with"
                         shape="rectangular"
+                        width="100%"
                         ux_mode="popup"
                       />
                     </div>
 
-                    {/* Switch view */}
                     <div className="login-switch">
                       {view === 'login' ? (
                         <p>
@@ -448,12 +456,15 @@ const LoginPage = () => {
               </>
             )}
 
-            <p className="login-terms">
-              Al continuar, aceptas nuestros{' '}
-              <a href="https://docs.google.com/document/d/e/2PACX-1vQB51fgxzSLqbZm8eJJFsGlFDHpJQPkwqjrSWkzSnnwAY6CH87cD0CFjO0jqcHgIDZKQwH6kgeFEH7N/pub" target="_blank" rel="noopener noreferrer">
-                Términos, Condiciones y Política de Privacidad
-              </a>.
-            </p>
+            <div className="login-footer">
+              <span className="login-quality-tag">ATS READY</span>
+              <p className="login-terms">
+                Al continuar, aceptas nuestros{' '}
+                <a href="https://docs.google.com/document/d/e/2PACX-1vQB51fgxzSLqbZm8eJJFsGlFDHpJQPkwqjrSWkzSnnwAY6CH87cD0CFjO0jqcHgIDZKQwH6kgeFEH7N/pub" target="_blank" rel="noopener noreferrer">
+                  Términos y Política de Privacidad
+                </a>.
+              </p>
+            </div>
           </div>
         </div>
       </div>
