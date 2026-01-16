@@ -8,7 +8,7 @@ const FROM_EMAIL = process.env.FROM_EMAIL || 'CV Express <onboarding@resend.dev>
 const emailService = {
   // Enviar email de recuperación de contraseña
   async sendPasswordReset(email, name, resetToken) {
-    const resetLink = `https://cv-express-nu.vercel.app/reset-password/${resetToken}`;
+    const resetLink = `https://cv-express.dpovi.me/reset-password/${resetToken}`;
     
     try {
       const { data, error } = await resend.emails.send({
@@ -97,7 +97,7 @@ const emailService = {
               </p>
               
               <div style="text-align: center; margin: 32px 0;">
-                <a href="https://cv-express-nu.vercel.app" style="display: inline-block; background: #1a237e; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 15px;">
+                <a href="https://cv-express.dpovi.me" style="display: inline-block; background: #1a237e; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 15px;">
                   Crear mi CV
                 </a>
               </div>
