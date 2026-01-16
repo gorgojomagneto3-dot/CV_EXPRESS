@@ -20,10 +20,12 @@ mongoose.connect(MONGODB_URI)
   .catch(err => console.error('❌ Error conectando a MongoDB:', err));
 
 // Importar rutas
+const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const paymentRoutes = require('./routes/payments');
 
 // Usar rutas
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/payments', paymentRoutes);
 

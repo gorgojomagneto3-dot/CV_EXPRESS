@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import apiService from '../services/apiService';
 
 const AuthContext = createContext(null);
 
@@ -28,30 +27,25 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (googleUserData) => {
+  // Login unificado para email y Google
+  const login = async (userData, authProvider = 'google') => {
     try {
-      // Enviar a backend para registrar/autenticar
-      const response = await apiService.authWithGoogle(googleUserData);
-      
-      const userData = {
-        ...response.user,
-        mongoId: response.user.id,
-        token: googleUserData.token,
-        isPremium: response.user.isPremium || false,
-        daysRemaining: response.user.daysRemaining || 0,
-        premiumExpiresAt: response.user.premiumExpiresAt || null
+      const userToSave = {
+        ...userData,
+        mongoId: userData.mongoId || userData.id,
+        isPremium: userData.isPremium || false,
+        daysRemaining: userData.daysRemaining || 0,
+        premiumExpiresAt: userData.premiumExpiresAt || null,
+        authProvider: authProvider
       };
 
-      setUser(userData);
-      localStorage.setItem('cv_user', JSON.stringify(userData));
+      setUser(userToSave);
+      localStorage.setItem('cv_user', JSON.stringify(userToSave));
       
-      return { success: true, isNewUser: response.isNewUser };
+      return { success: true, isNewUser: userData.isNewUser || false };
     } catch (error) {
       console.error('Error en login:', error);
-      // Fallback: guardar solo datos de Google si el backend falla
-      setUser(googleUserData);
-      localStorage.setItem('cv_user', JSON.stringify(googleUserData));
-      return { success: true, isNewUser: false };
+      return { success: false, error: error.message };
     }
   };
 

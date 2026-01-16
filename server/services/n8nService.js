@@ -15,7 +15,8 @@ const n8nService = {
         data: {
           email: user.email,
           name: user.name,
-          isNewUser: user.isNewUser || false
+          isNewUser: user.isNewUser || false,
+          authProvider: user.authProvider || 'google'
         }
       };
 
@@ -35,6 +36,35 @@ const n8nService = {
         console.error('❌ Response status:', error.response.status);
         console.error('❌ Response data:', error.response.data);
       }
+      return { success: false, error: error.message };
+    }
+  },
+
+  // Notificar solicitud de reset de password
+  async notifyPasswordReset(data) {
+    try {
+      const payload = {
+        event: 'PASSWORD_RESET',
+        timestamp: new Date().toISOString(),
+        data: {
+          email: data.email,
+          name: data.name,
+          resetToken: data.resetToken,
+          resetLink: `https://cv-express-nu.vercel.app/reset-password/${data.resetToken}`
+        }
+      };
+
+      console.log('🔑 Enviando solicitud de reset password a n8n');
+      
+      const response = await axios.post(N8N_WEBHOOK_URL, payload, {
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 15000
+      });
+      
+      console.log('✅ Notificación de reset password enviada');
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error('❌ Error enviando reset password:', error.message);
       return { success: false, error: error.message };
     }
   },
