@@ -1,90 +1,75 @@
 export const cvData = {
   personalInfo: {
     nombre: "Tu Nombre Completo",
-    titulo: "Desarrollador Full Stack",
+    titulo: "Tu Profesión o Cargo",
     email: "tuemail@ejemplo.com",
-    telefono: "+51 999 999 999",
-    ubicacion: "Lima, Perú",
+    telefono: "999 999 999",
+    ubicacion: "Ciudad, País",
     linkedin: "linkedin.com/in/tuperfil",
-    github: "github.com/tuusuario",
+    github: "",
     portfolio: ""
   },
   
-  resumenProfesional: "Profesional con X años de experiencia en desarrollo de software. Especializado en tecnologías web modernas con enfoque en soluciones escalables y código limpio. Apasionado por aprender nuevas tecnologías y trabajar en equipo.",
+  resumenProfesional: "Profesional con experiencia en [tu área]. Especializado en [tus especialidades]. Busco aportar valor a una organización mientras continúo mi desarrollo profesional.",
   
   experiencia: [
     {
-      puesto: "Desarrollador Full Stack",
-      empresa: "Empresa ABC",
-      ubicacion: "Lima, Perú",
-      fechaInicio: "Enero 2023",
+      puesto: "Tu cargo o puesto",
+      empresa: "Nombre de la empresa",
+      ubicacion: "Ciudad, País",
+      fechaInicio: "Mes Año",
       fechaFin: "Presente",
       logros: [
-        "Desarrollo de aplicaciones web con React y Node.js",
-        "Implementación de APIs RESTful con Express",
-        "Optimización del rendimiento de aplicaciones en un 40%",
-        "Colaboración en equipo usando metodologías ágiles"
+        "Describe un logro o responsabilidad importante",
+        "Otro logro medible con resultados",
+        "Contribución al equipo o proyecto"
       ]
     }
   ],
   
-  // Proyectos adicionales (para practicantes/juniors sin mucha experiencia laboral)
+  // Proyectos adicionales (para practicantes/juniors o proyectos personales)
   proyectos: [
     {
       nombre: "Nombre del Proyecto",
-      descripcion: "Breve descripción del proyecto y qué problema resuelve",
-      tecnologias: "React, Node.js, MongoDB"
+      descripcion: "Breve descripción del proyecto y qué problema resuelve"
     }
   ],
   
   educacion: [
     {
-      titulo: "Ingeniería de Sistemas",
-      institucion: "Universidad Nacional",
-      ubicacion: "Lima, Perú",
-      fechaInicio: "2017",
-      fechaFin: "Presente",
-      cursosRelevantes: "Programación Orientada a Objetos, Bases de Datos, Ingeniería de Software, Estructuras de Datos"
+      titulo: "Tu carrera o título",
+      institucion: "Universidad / Instituto",
+      ubicacion: "Ciudad, País",
+      fechaInicio: "Año inicio",
+      fechaFin: "Año fin o Presente",
+      cursosRelevantes: "Cursos importantes separados por comas"
     }
   ],
   
   habilidades: {
-    tecnicas: [
-      "JavaScript", "TypeScript", "React", "Node.js",
-      "Express", "MongoDB", "PostgreSQL", "Git",
-      "HTML5", "CSS3", "Tailwind CSS", "Docker"
-    ],
-    blandas: [
-      "Trabajo en equipo", "Comunicación efectiva",
-      "Resolución de problemas", "Adaptabilidad"
-    ]
+    tecnicas: [],
+    blandas: []
   },
 
-  // Habilidades organizadas por categoría (para mejor presentación en el CV)
-  habilidadesPorCategoria: {
-    frontend: "React, Next.js, TypeScript, JavaScript, Tailwind CSS, HTML5, CSS3",
-    backend: "Node.js, Express, Python, REST APIs",
-    basesdatos: "PostgreSQL, MongoDB, Supabase, Firebase",
-    herramientas: "Git, GitHub, Docker, Vercel, Figma, VS Code, Postman",
-    metodologias: "Scrum, Agile, Control de versiones"
-  },
+  // Habilidades organizadas por categoría (opcional)
+  habilidadesPorCategoria: null,
   
   certificaciones: [
     {
-      nombre: "Certificación Ejemplo",
-      institucion: "Plataforma",
-      fecha: "2024"
+      nombre: "",
+      institucion: "",
+      fecha: ""
     }
   ],
   
   idiomas: [
     { idioma: "Español", nivel: "Nativo" },
-    { idioma: "Inglés", nivel: "Intermedio - Lectura técnica" }
+    { idioma: "", nivel: "" }
   ],
 
   // Información adicional
   infoAdicional: {
-    disponibilidad: "Inmediata - Tiempo completo o medio tiempo",
-    softSkills: "Trabajo en equipo, Comunicación efectiva, Aprendizaje rápido, Autodidacta, Proactividad"
+    disponibilidad: "",
+    softSkills: ""
   }
 };

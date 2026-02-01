@@ -62,8 +62,8 @@ export const suggestSkills = async (cvData) => {
     .map(edu => `${edu.titulo} - ${edu.institucion}`)
     .join(', ');
 
-  const prompt = `Eres un experto en recursos humanos y desarrollo de CVs profesionales. 
-Basándote en la siguiente información de un candidato, sugiere las mejores habilidades técnicas y blandas.
+  const prompt = `Eres un experto en recursos humanos y desarrollo de CVs profesionales para TODO tipo de carreras y profesiones.
+Basándote en la siguiente información de un candidato, sugiere las mejores habilidades técnicas y blandas ESPECÍFICAS para su área profesional.
 
 INFORMACIÓN DEL CANDIDATO:
 - Título profesional: ${personalInfo.titulo || 'No especificado'}
@@ -71,11 +71,19 @@ INFORMACIÓN DEL CANDIDATO:
 - Experiencia laboral: ${experienciaTexto || 'No especificada'}
 - Educación: ${educacionTexto || 'No especificada'}
 
-INSTRUCCIONES:
-1. Sugiere 6-8 habilidades TÉCNICAS relevantes para su perfil
-2. Sugiere 4-6 habilidades BLANDAS que complementen su experiencia
-3. Sé específico y usa términos profesionales actuales
-4. Las habilidades deben ser relevantes para el mercado laboral actual
+INSTRUCCIONES IMPORTANTES:
+1. DETECTA el área profesional del candidato (medicina, derecho, ingeniería, administración, educación, marketing, contabilidad, etc.)
+2. Sugiere 6-8 habilidades TÉCNICAS específicas para ESA profesión
+3. Sugiere 4-6 habilidades BLANDAS relevantes para el puesto
+4. USA términos profesionales actuales del sector
+5. Las habilidades deben ser relevantes para el mercado laboral actual
+
+EJEMPLOS por profesión:
+- Contador: Excel avanzado, SAP, Análisis financiero, Normas tributarias, etc.
+- Médico: Diagnóstico clínico, Atención primaria, Historia clínica electrónica, etc.
+- Abogado: Litigación, Derecho corporativo, Redacción de contratos, etc.
+- Marketing: Google Ads, SEO/SEM, Analytics, Estrategia digital, etc.
+- Ingeniero Civil: AutoCAD, SAP2000, Gestión de obras, Presupuestos, etc.
 
 RESPONDE SOLO en formato JSON exacto (sin markdown, sin explicaciones):
 {"tecnicas": ["habilidad1", "habilidad2", ...], "blandas": ["habilidad1", "habilidad2", ...]}`;

@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import Icon from '../Icon';
 import { suggestSkills, getAIUsesRemaining, canUseAI } from '../../services/aiService';
 
-// Sugerencias rápidas predefinidas
+// Sugerencias rápidas predefinidas (universales para todo tipo de profesionales)
 const QUICK_SKILLS = {
   tecnicas: [
-    'JavaScript', 'Python', 'React', 'Node.js', 'SQL', 'Excel', 'Git', 
-    'TypeScript', 'Java', 'HTML/CSS', 'AWS', 'Docker', 'MongoDB', 'Power BI'
+    'Microsoft Office', 'Excel Avanzado', 'Google Workspace', 'Análisis de datos', 
+    'Gestión de proyectos', 'Atención al cliente', 'Redacción', 'Investigación',
+    'Presentaciones', 'SAP', 'CRM', 'ERP', 'Power BI', 'SQL'
   ],
   blandas: [
     'Liderazgo', 'Trabajo en equipo', 'Comunicación', 'Resolución de problemas',
-    'Adaptabilidad', 'Gestión del tiempo', 'Creatividad', 'Pensamiento crítico'
+    'Adaptabilidad', 'Gestión del tiempo', 'Creatividad', 'Pensamiento crítico',
+    'Negociación', 'Empatía', 'Proactividad', 'Organización'
   ]
 };
 
@@ -608,36 +610,19 @@ const Step3Education = ({ data, onChange }) => {
                 )}
               </div>
 
-              <div className="form-grid-2col">
-                <div className="form-group">
-                  <label>Nombre del proyecto <span className="required">*</span></label>
-                  <div className="input-with-icon">
-                    <span className="input-icon">
-                      <Icon name="code" size={16} />
-                    </span>
-                    <input
-                      type="text"
-                      value={proy.nombre}
-                      onChange={(e) => updateProyecto(index, 'nombre', e.target.value)}
-                      placeholder="Ej: Sistema de Facturación"
-                      className="input-modern with-icon"
-                    />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Tecnologías usadas</label>
-                  <div className="input-with-icon">
-                    <span className="input-icon">
-                      <Icon name="zap" size={16} />
-                    </span>
-                    <input
-                      type="text"
-                      value={proy.tecnologias || ''}
-                      onChange={(e) => updateProyecto(index, 'tecnologias', e.target.value)}
-                      placeholder="React, Node.js, PostgreSQL"
-                      className="input-modern with-icon"
-                    />
-                  </div>
+              <div className="form-group">
+                <label>Nombre del proyecto <span className="required">*</span></label>
+                <div className="input-with-icon">
+                  <span className="input-icon">
+                    <Icon name="code" size={16} />
+                  </span>
+                  <input
+                    type="text"
+                    value={proy.nombre}
+                    onChange={(e) => updateProyecto(index, 'nombre', e.target.value)}
+                    placeholder="Ej: Sistema de Facturación, Plataforma E-commerce, etc."
+                    className="input-modern with-icon"
+                  />
                 </div>
               </div>
 
@@ -729,6 +714,67 @@ const Step3Education = ({ data, onChange }) => {
         <button type="button" className="btn-add-item compact" onClick={addCertificacion}>
           <span>+</span> Agregar certificacion
         </button>
+      </div>
+
+      {/* INFORMACIÓN ADICIONAL - Soft Skills y Disponibilidad */}
+      <div className="step-section">
+        <div className="step-header">
+          <h2>
+            <span className="step-title-icon">
+              <Icon name="info" size={18} />
+            </span>
+            Información Adicional
+          </h2>
+          <p className="step-description">Completa tu perfil con soft skills y disponibilidad</p>
+        </div>
+
+        <div className="form-card">
+          <div className="form-group">
+            <label>Soft Skills</label>
+            <div className="input-with-icon">
+              <span className="input-icon">
+                <Icon name="users" size={16} />
+              </span>
+              <input
+                type="text"
+                value={data.infoAdicional?.softSkills || ''}
+                onChange={(e) => onChange({
+                  ...data,
+                  infoAdicional: { ...data.infoAdicional, softSkills: e.target.value }
+                })}
+                placeholder="Ej: Trabajo en equipo, Comunicación efectiva, Liderazgo, Proactividad"
+                className="input-modern with-icon"
+              />
+            </div>
+            <p className="field-hint">Separa las habilidades blandas con comas</p>
+          </div>
+
+          <div className="form-group">
+            <label>Disponibilidad</label>
+            <div className="input-with-icon">
+              <span className="input-icon">
+                <Icon name="clock" size={16} />
+              </span>
+              <select
+                value={data.infoAdicional?.disponibilidad || ''}
+                onChange={(e) => onChange({
+                  ...data,
+                  infoAdicional: { ...data.infoAdicional, disponibilidad: e.target.value }
+                })}
+                className="input-modern with-icon"
+              >
+                <option value="">Selecciona tu disponibilidad</option>
+                <option value="Inmediata - Tiempo completo">Inmediata - Tiempo completo</option>
+                <option value="Inmediata - Medio tiempo">Inmediata - Medio tiempo</option>
+                <option value="Inmediata - Tiempo completo o medio tiempo">Inmediata - Tiempo completo o medio tiempo</option>
+                <option value="A partir de 2 semanas">A partir de 2 semanas</option>
+                <option value="A partir de 1 mes">A partir de 1 mes</option>
+                <option value="Solo fines de semana">Solo fines de semana</option>
+                <option value="Freelance / Por proyectos">Freelance / Por proyectos</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
