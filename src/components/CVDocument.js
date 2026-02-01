@@ -373,45 +373,77 @@ const CVDocument = ({ data, template = 'classic' }) => {
           </View>
         )}
 
-        {/* HABILIDADES TÉCNICAS - Por categoría */}
-        {habilidadesPorCategoria && (
+        {/* HABILIDADES TÉCNICAS - Por categoría o lista simple */}
+        {(habilidadesPorCategoria || (habilidades && (habilidades.tecnicas?.length > 0 || habilidades.blandas?.length > 0))) && (
           <View style={baseStyles.seccion}>
             <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>HABILIDADES TÉCNICAS</Text>
-            {habilidadesPorCategoria.frontend && (
+            
+            {/* Si hay habilidadesPorCategoria, mostrar por categorías */}
+            {habilidadesPorCategoria?.frontend && (
               <View style={baseStyles.habilidadesCategoria}>
                 <Text style={baseStyles.habilidadesCategoriaLabel}>Frontend: 
                   <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.frontend}</Text>
                 </Text>
               </View>
             )}
-            {habilidadesPorCategoria.backend && (
+            {habilidadesPorCategoria?.backend && (
               <View style={baseStyles.habilidadesCategoria}>
                 <Text style={baseStyles.habilidadesCategoriaLabel}>Backend: 
                   <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.backend}</Text>
                 </Text>
               </View>
             )}
-            {habilidadesPorCategoria.basesdatos && (
+            {habilidadesPorCategoria?.basesdatos && (
               <View style={baseStyles.habilidadesCategoria}>
                 <Text style={baseStyles.habilidadesCategoriaLabel}>Bases de Datos: 
                   <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.basesdatos}</Text>
                 </Text>
               </View>
             )}
-            {habilidadesPorCategoria.herramientas && (
+            {habilidadesPorCategoria?.herramientas && (
               <View style={baseStyles.habilidadesCategoria}>
                 <Text style={baseStyles.habilidadesCategoriaLabel}>Tools: 
                   <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.herramientas}</Text>
                 </Text>
               </View>
             )}
-            {habilidadesPorCategoria.metodologias && (
+            {habilidadesPorCategoria?.metodologias && (
               <View style={baseStyles.habilidadesCategoria}>
                 <Text style={baseStyles.habilidadesCategoriaLabel}>Metodologías: 
                   <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.metodologias}</Text>
                 </Text>
               </View>
             )}
+            
+            {/* Fallback: Si no hay habilidadesPorCategoria pero sí hay habilidades simples */}
+            {!habilidadesPorCategoria && habilidades?.tecnicas?.length > 0 && (
+              <View style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.habilidadesCategoriaLabel}>Técnicas: 
+                  <Text style={baseStyles.habilidadesCategoriaValor}> {habilidades.tecnicas.join(', ')}</Text>
+                </Text>
+              </View>
+            )}
+            {!habilidadesPorCategoria && habilidades?.blandas?.length > 0 && (
+              <View style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.habilidadesCategoriaLabel}>Soft Skills: 
+                  <Text style={baseStyles.habilidadesCategoriaValor}> {habilidades.blandas.join(', ')}</Text>
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* CERTIFICACIONES */}
+        {certificaciones && certificaciones.length > 0 && certificaciones[0].nombre && (
+          <View style={baseStyles.seccion}>
+            <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>CERTIFICACIONES</Text>
+            {certificaciones.map((cert, index) => (
+              <View key={index} style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.logroItem}>
+                  • {cert.nombre}{cert.institucion && ` - ${cert.institucion}`}{cert.fecha && ` (${cert.fecha})`}
+                </Text>
+              </View>
+            ))}
           </View>
         )}
 
