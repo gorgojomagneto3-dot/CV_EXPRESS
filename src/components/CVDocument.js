@@ -1,124 +1,159 @@
 import React, { useMemo } from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 
 // Paletas de colores por tema
 const themes = {
   classic: {
-    primary: '#1e40af',       // Azul fuerte
-    secondary: '#2563eb',     // Azul brillante
-    bgAccent: '#eff6ff',      // Azul muy claro
-    text: '#374151',          // Gris oscuro (Slate)
-    textLight: '#6b7280'      // Gris medio (Slate)
+    primary: '#1e40af',
+    secondary: '#2563eb',
+    bgAccent: '#eff6ff',
+    text: '#374151',
+    textLight: '#6b7280'
   },
-  minimal: {                  // Corregido de 'minimalist' a 'minimal'
-    primary: '#171717',       // Negro Neutro (Neutral 900)
-    secondary: '#525252',     // Gris Neutro (Neutral 600)
-    bgAccent: '#f5f5f5',      // Gris muy claro (Neutral 100)
-    text: '#262626',          // Gris oscuro (Neutral 800)
-    textLight: '#737373'      // Gris medio (Neutral 500)
+  minimal: {
+    primary: '#171717',
+    secondary: '#525252',
+    bgAccent: '#f5f5f5',
+    text: '#262626',
+    textLight: '#737373'
   },
   modern: {
-    primary: '#7c3aed',       // Púrpura
-    secondary: '#8b5cf6',     // Violeta
-    bgAccent: '#f5f3ff',      // Púrpura muy claro
+    primary: '#7c3aed',
+    secondary: '#8b5cf6',
+    bgAccent: '#f5f3ff',
+    text: '#374151',
+    textLight: '#6b7280'
+  },
+  executive: {
+    primary: '#0f172a',
+    secondary: '#334155',
+    bgAccent: '#f8fafc',
+    text: '#1e293b',
+    textLight: '#64748b'
+  },
+  creative: {
+    primary: '#0891b2',
+    secondary: '#06b6d4',
+    bgAccent: '#ecfeff',
     text: '#374151',
     textLight: '#6b7280'
   }
 };
 
-// Estilos Base (Neutros por defecto)
+// Estilos base optimizados
 const baseStyles = StyleSheet.create({
   page: {
     padding: 30,
-    fontSize: 10,
+    fontSize: 9,
     fontFamily: 'Helvetica',
     backgroundColor: '#ffffff',
     color: '#333333',
   },
-
-  // Header / Info Personal
+  // Header mejorado con foto
   header: {
-    marginBottom: 15,
+    marginBottom: 12,
     borderBottomWidth: 2,
     borderBottomStyle: 'solid',
-    paddingBottom: 10,
+    paddingBottom: 8,
+  },
+  headerWithPhoto: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 15,
+  },
+  headerPhoto: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    objectFit: 'cover',
+  },
+  headerInfo: {
+    flex: 1,
   },
   nombre: {
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: 'Helvetica-Bold',
-    marginBottom: 4,
+    marginBottom: 2,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   titulo: {
-    fontSize: 12,
-    color: '#525252', // Neutral 600
-    marginBottom: 8,
+    fontSize: 11,
+    marginBottom: 6,
   },
   contactoContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 6,
   },
   contactoItem: {
-    fontSize: 9,
-    color: '#404040', // Neutral 700
+    fontSize: 8,
+    color: '#404040',
   },
-
+  contactoSeparator: {
+    fontSize: 8,
+    color: '#9ca3af',
+  },
   // Secciones
   seccion: {
-    marginBottom: 12,
+    marginBottom: 10,
   },
   seccionTitulo: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'Helvetica-Bold',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    borderBottomColor: '#e5e5e5', // Neutral 200
-    paddingBottom: 3,
-    marginBottom: 8,
+    paddingBottom: 2,
+    marginBottom: 6,
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
-
   // Resumen
   resumen: {
-    fontSize: 10,
+    fontSize: 9,
     lineHeight: 1.5,
     textAlign: 'justify',
     color: '#404040',
   },
-
   // Experiencia
   experienciaItem: {
-    marginBottom: 10,
+    marginBottom: 8,
   },
   experienciaHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 2,
+    alignItems: 'flex-start',
+    marginBottom: 1,
+  },
+  puestoContainer: {
+    flex: 1,
   },
   puesto: {
-    fontSize: 11,
+    fontSize: 10,
     fontFamily: 'Helvetica-Bold',
-    // color se maneja dinámicamente o por defecto
+  },
+  empresaProyecto: {
+    fontSize: 9,
+    fontStyle: 'italic',
   },
   fecha: {
-    fontSize: 9,
-    color: '#737373', // Neutral 500
+    fontSize: 8,
+    textAlign: 'right',
   },
   empresa: {
-    fontSize: 10,
-    color: '#525252',
-    marginBottom: 4,
+    fontSize: 9,
+    marginBottom: 3,
   },
   logroItem: {
-    fontSize: 9,
-    marginLeft: 10,
-    marginBottom: 2,
+    fontSize: 8,
+    marginLeft: 8,
+    marginBottom: 1,
     color: '#404040',
+    lineHeight: 1.4,
   },
-
   // Educación
   educacionItem: {
-    marginBottom: 6,
+    marginBottom: 5,
   },
   tituloEducacion: {
     fontSize: 10,
@@ -126,60 +161,74 @@ const baseStyles = StyleSheet.create({
   },
   institucion: {
     fontSize: 9,
+  },
+  cursosRelevantes: {
+    fontSize: 8,
     color: '#525252',
+    marginTop: 2,
+    fontStyle: 'italic',
   },
-
-  // Habilidades
-  habilidadesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
+  // Habilidades por categoría
+  habilidadesCategoria: {
+    marginBottom: 4,
   },
-  habilidadItem: {
+  habilidadesCategoriaLabel: {
     fontSize: 9,
-    padding: '3 8',
-    borderRadius: 3,
-  },
-  habilidadesSubtitulo: {
-    fontSize: 10,
     fontFamily: 'Helvetica-Bold',
+    marginBottom: 1,
+  },
+  habilidadesCategoriaValor: {
+    fontSize: 8,
     color: '#404040',
-    marginBottom: 4,
-    marginTop: 6,
+    lineHeight: 1.4,
   },
-
-  // Certificaciones e Idiomas
-  certificacionItem: {
+  // Proyectos
+  proyectoItem: {
     marginBottom: 4,
   },
-  certificacionNombre: {
-    fontSize: 10,
+  proyectoNombre: {
+    fontSize: 9,
     fontFamily: 'Helvetica-Bold',
   },
-  certificacionDetalle: {
-    fontSize: 9,
-    color: '#737373',
+  proyectoDescripcion: {
+    fontSize: 8,
+    color: '#404040',
+    lineHeight: 1.4,
   },
-
-  // Idiomas en fila
-  idiomasContainer: {
+  // Info adicional
+  infoAdicionalRow: {
     flexDirection: 'row',
-    gap: 20,
+    marginBottom: 3,
   },
-  idiomaItem: {
+  infoAdicionalLabel: {
     fontSize: 9,
+    fontFamily: 'Helvetica-Bold',
+    width: 80,
   },
-
-  // Dos columnas para la parte inferior
+  infoAdicionalValor: {
+    fontSize: 8,
+    color: '#404040',
+    flex: 1,
+  },
+  // Layout dos columnas
   dosColumnas: {
     flexDirection: 'row',
-    gap: 20,
+    gap: 15,
   },
   columnaIzquierda: {
     flex: 1,
   },
   columnaDerecha: {
     flex: 1,
+  },
+  // Idiomas inline
+  idiomasContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  idiomaItem: {
+    fontSize: 8,
   },
 });
 
@@ -188,145 +237,240 @@ const CVDocument = ({ data, template = 'classic' }) => {
     personalInfo,
     resumenProfesional,
     experiencia,
+    proyectos,
     educacion,
     habilidades,
+    habilidadesPorCategoria,
     certificaciones,
-    idiomas
+    idiomas,
+    infoAdicional
   } = data;
 
   const theme = themes[template] || themes.classic;
 
-  // Estilos dinámicos basados en el tema
   const dynamicStyles = useMemo(() => StyleSheet.create({
-    nombre: {
-      color: theme.primary,
-    },
-    header: {
-      borderBottomColor: theme.secondary,
-    },
-    titulo: {
-      color: theme.textLight,
-    },
-    seccionTitulo: {
-      color: theme.primary,
-    },
-    puesto: {
-      color: theme.text, // Usa el color de texto principal del tema
-    },
-    tituloEducacion: {
-      color: theme.text,
-    },
-    certificacionNombre: {
-      color: theme.text,
-    },
-    habilidadItem: {
-      backgroundColor: theme.bgAccent,
-      color: theme.primary,
-    }
+    nombre: { color: theme.primary },
+    header: { borderBottomColor: theme.secondary },
+    titulo: { color: theme.textLight },
+    seccionTitulo: { color: theme.primary, borderBottomColor: theme.secondary },
+    puesto: { color: theme.text },
+    tituloEducacion: { color: theme.text },
+    fecha: { color: theme.textLight },
+    empresaProyecto: { color: theme.secondary },
   }), [theme]);
 
-  // Styles merging helpers
   const s = (base, dynamic) => [base, dynamic];
+
+  // Construir línea de contacto
+  const contactItems = [
+    personalInfo.email && `📧 ${personalInfo.email}`,
+    personalInfo.telefono && `📱 ${personalInfo.telefono}`,
+    personalInfo.github && `🌐 ${personalInfo.github}`,
+    personalInfo.linkedin && `💼 ${personalInfo.linkedin}`,
+    personalInfo.ubicacion && `📍 ${personalInfo.ubicacion}`,
+  ].filter(Boolean);
 
   return (
     <Document>
       <Page size="A4" style={baseStyles.page}>
 
-        {/* Header - Información Personal */}
+        {/* HEADER - Información Personal con Foto */}
         <View style={s(baseStyles.header, dynamicStyles.header)}>
-          <Text style={s(baseStyles.nombre, dynamicStyles.nombre)}>{personalInfo.nombre}</Text>
-          <Text style={s(baseStyles.titulo, dynamicStyles.titulo)}>{personalInfo.titulo}</Text>
-          <View style={baseStyles.contactoContainer}>
-            <Text style={baseStyles.contactoItem}>{personalInfo.email}</Text>
-            <Text style={baseStyles.contactoItem}>|</Text>
-            <Text style={baseStyles.contactoItem}>{personalInfo.telefono}</Text>
-            <Text style={baseStyles.contactoItem}>|</Text>
-            <Text style={baseStyles.contactoItem}>{personalInfo.ubicacion}</Text>
-            <Text style={baseStyles.contactoItem}>|</Text>
-            <Text style={baseStyles.contactoItem}>{personalInfo.linkedin}</Text>
-          </View>
-        </View>
-
-        {/* Resumen Profesional */}
-        <View style={baseStyles.seccion}>
-          <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>Resumen Profesional</Text>
-          <Text style={baseStyles.resumen}>{resumenProfesional}</Text>
-        </View>
-
-        {/* Experiencia Laboral */}
-        <View style={baseStyles.seccion}>
-          <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>Experiencia Laboral</Text>
-          {experiencia.map((exp, index) => (
-            <View key={index} style={baseStyles.experienciaItem}>
-              <View style={baseStyles.experienciaHeader}>
-                <Text style={s(baseStyles.puesto, dynamicStyles.puesto)}>{exp.puesto}</Text>
-                <Text style={baseStyles.fecha}>{exp.fechaInicio} - {exp.fechaFin}</Text>
-              </View>
-              <Text style={baseStyles.empresa}>{exp.empresa} | {exp.ubicacion}</Text>
-              {exp.logros.map((logro, i) => (
-                <Text key={i} style={baseStyles.logroItem}>• {logro}</Text>
-              ))}
-            </View>
-          ))}
-        </View>
-
-        {/* Educación */}
-        <View style={baseStyles.seccion}>
-          <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>Educación</Text>
-          {educacion.map((edu, index) => (
-            <View key={index} style={baseStyles.educacionItem}>
-              <View style={baseStyles.experienciaHeader}>
-                <Text style={s(baseStyles.tituloEducacion, dynamicStyles.tituloEducacion)}>{edu.titulo}</Text>
-                <Text style={baseStyles.fecha}>{edu.fechaInicio} - {edu.fechaFin}</Text>
-              </View>
-              <Text style={baseStyles.institucion}>{edu.institucion} | {edu.ubicacion}</Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Habilidades */}
-        <View style={baseStyles.seccion}>
-          <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>Habilidades</Text>
-          <Text style={baseStyles.habilidadesSubtitulo}>Técnicas</Text>
-          <View style={baseStyles.habilidadesContainer}>
-            {habilidades.tecnicas.map((hab, index) => (
-              <Text key={index} style={s(baseStyles.habilidadItem, dynamicStyles.habilidadItem)}>{hab}</Text>
-            ))}
-          </View>
-          <Text style={baseStyles.habilidadesSubtitulo}>Blandas</Text>
-          <View style={baseStyles.habilidadesContainer}>
-            {habilidades.blandas.map((hab, index) => (
-              <Text key={index} style={s(baseStyles.habilidadItem, dynamicStyles.habilidadItem)}>{hab}</Text>
-            ))}
-          </View>
-        </View>
-
-        {/* Certificaciones e Idiomas en dos columnas */}
-        <View style={baseStyles.dosColumnas}>
-          <View style={baseStyles.columnaIzquierda}>
-            <View style={baseStyles.seccion}>
-              <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>Certificaciones</Text>
-              {certificaciones.map((cert, index) => (
-                <View key={index} style={baseStyles.certificacionItem}>
-                  <Text style={s(baseStyles.certificacionNombre, dynamicStyles.certificacionNombre)}>{cert.nombre}</Text>
-                  <Text style={baseStyles.certificacionDetalle}>{cert.institucion} | {cert.fecha}</Text>
+          {personalInfo.foto ? (
+            <View style={baseStyles.headerWithPhoto}>
+              <Image src={personalInfo.foto} style={baseStyles.headerPhoto} />
+              <View style={baseStyles.headerInfo}>
+                <Text style={s(baseStyles.nombre, dynamicStyles.nombre)}>{personalInfo.nombre}</Text>
+                <Text style={s(baseStyles.titulo, dynamicStyles.titulo)}>{personalInfo.titulo}</Text>
+                <View style={baseStyles.contactoContainer}>
+                  {contactItems.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <Text style={baseStyles.contactoItem}>{item}</Text>
+                      {index < contactItems.length - 1 && (
+                        <Text style={baseStyles.contactoSeparator}>|</Text>
+                      )}
+                    </React.Fragment>
+                  ))}
                 </View>
-              ))}
+              </View>
             </View>
-          </View>
-
-          <View style={baseStyles.columnaDerecha}>
-            <View style={baseStyles.seccion}>
-              <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>Idiomas</Text>
-              <View style={baseStyles.idiomasContainer}>
-                {idiomas.map((idioma, index) => (
-                  <Text key={index} style={baseStyles.idiomaItem}>
-                    {idioma.idioma}: {idioma.nivel}
-                  </Text>
+          ) : (
+            <>
+              <Text style={s(baseStyles.nombre, dynamicStyles.nombre)}>{personalInfo.nombre}</Text>
+              <Text style={s(baseStyles.titulo, dynamicStyles.titulo)}>{personalInfo.titulo}</Text>
+              <View style={baseStyles.contactoContainer}>
+                {contactItems.map((item, index) => (
+                  <React.Fragment key={index}>
+                    <Text style={baseStyles.contactoItem}>{item}</Text>
+                    {index < contactItems.length - 1 && (
+                      <Text style={baseStyles.contactoSeparator}>|</Text>
+                    )}
+                  </React.Fragment>
                 ))}
               </View>
-            </View>
+            </>
+          )}
+        </View>
+
+        {/* PERFIL PROFESIONAL */}
+        {resumenProfesional && (
+          <View style={baseStyles.seccion}>
+            <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>PERFIL PROFESIONAL</Text>
+            <Text style={baseStyles.resumen}>{resumenProfesional}</Text>
           </View>
+        )}
+
+        {/* EXPERIENCIA EN PROYECTOS / LABORAL */}
+        {experiencia && experiencia.length > 0 && experiencia[0].puesto && (
+          <View style={baseStyles.seccion}>
+            <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>
+              EXPERIENCIA {proyectos && proyectos.length > 0 ? 'EN PROYECTOS' : 'LABORAL'}
+            </Text>
+            {experiencia.map((exp, index) => (
+              <View key={index} style={baseStyles.experienciaItem}>
+                <View style={baseStyles.experienciaHeader}>
+                  <View style={baseStyles.puestoContainer}>
+                    <Text style={s(baseStyles.puesto, dynamicStyles.puesto)}>
+                      {exp.puesto} – {exp.empresa}
+                    </Text>
+                  </View>
+                  <Text style={s(baseStyles.fecha, dynamicStyles.fecha)}>
+                    {exp.fechaInicio} - {exp.fechaFin}
+                  </Text>
+                </View>
+                {exp.logros && exp.logros.map((logro, i) => (
+                  logro && <Text key={i} style={baseStyles.logroItem}>• {logro}</Text>
+                ))}
+                {exp.tecnologias && (
+                  <Text style={[baseStyles.logroItem, { fontStyle: 'italic' }]}>
+                    Stack: {exp.tecnologias}
+                  </Text>
+                )}
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* EDUCACIÓN */}
+        {educacion && educacion.length > 0 && (
+          <View style={baseStyles.seccion}>
+            <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>EDUCACIÓN</Text>
+            {educacion.map((edu, index) => (
+              <View key={index} style={baseStyles.educacionItem}>
+                <View style={baseStyles.experienciaHeader}>
+                  <Text style={s(baseStyles.tituloEducacion, dynamicStyles.tituloEducacion)}>
+                    {edu.titulo} ({edu.fechaInicio} - {edu.fechaFin})
+                  </Text>
+                </View>
+                <Text style={baseStyles.institucion}>{edu.institucion}</Text>
+                {edu.cursosRelevantes && (
+                  <Text style={baseStyles.cursosRelevantes}>
+                    Cursos relevantes: {edu.cursosRelevantes}
+                  </Text>
+                )}
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* HABILIDADES TÉCNICAS - Por categoría */}
+        {habilidadesPorCategoria && (
+          <View style={baseStyles.seccion}>
+            <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>HABILIDADES TÉCNICAS</Text>
+            {habilidadesPorCategoria.frontend && (
+              <View style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.habilidadesCategoriaLabel}>Frontend: 
+                  <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.frontend}</Text>
+                </Text>
+              </View>
+            )}
+            {habilidadesPorCategoria.backend && (
+              <View style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.habilidadesCategoriaLabel}>Backend: 
+                  <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.backend}</Text>
+                </Text>
+              </View>
+            )}
+            {habilidadesPorCategoria.basesdatos && (
+              <View style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.habilidadesCategoriaLabel}>Bases de Datos: 
+                  <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.basesdatos}</Text>
+                </Text>
+              </View>
+            )}
+            {habilidadesPorCategoria.herramientas && (
+              <View style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.habilidadesCategoriaLabel}>Tools: 
+                  <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.herramientas}</Text>
+                </Text>
+              </View>
+            )}
+            {habilidadesPorCategoria.metodologias && (
+              <View style={baseStyles.habilidadesCategoria}>
+                <Text style={baseStyles.habilidadesCategoriaLabel}>Metodologías: 
+                  <Text style={baseStyles.habilidadesCategoriaValor}> {habilidadesPorCategoria.metodologias}</Text>
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* PROYECTOS ADICIONALES */}
+        {proyectos && proyectos.length > 0 && proyectos[0].nombre && (
+          <View style={baseStyles.seccion}>
+            <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>PROYECTOS ADICIONALES</Text>
+            {proyectos.map((proy, index) => (
+              <View key={index} style={baseStyles.proyectoItem}>
+                <Text style={baseStyles.logroItem}>
+                  • <Text style={baseStyles.proyectoNombre}>{proy.nombre}</Text>
+                  {proy.descripcion && ` – ${proy.descripcion}`}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* INFORMACIÓN ADICIONAL */}
+        <View style={baseStyles.seccion}>
+          <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>INFORMACIÓN ADICIONAL</Text>
+          
+          {/* Idiomas */}
+          {idiomas && idiomas.length > 0 && (
+            <View style={baseStyles.infoAdicionalRow}>
+              <Text style={baseStyles.infoAdicionalLabel}>Idiomas:</Text>
+              <Text style={baseStyles.infoAdicionalValor}>
+                {idiomas.map((i, idx) => `${i.idioma} (${i.nivel})`).join(', ')}
+              </Text>
+            </View>
+          )}
+
+          {/* Soft Skills */}
+          {infoAdicional?.softSkills && (
+            <View style={baseStyles.infoAdicionalRow}>
+              <Text style={baseStyles.infoAdicionalLabel}>Soft Skills:</Text>
+              <Text style={baseStyles.infoAdicionalValor}>{infoAdicional.softSkills}</Text>
+            </View>
+          )}
+
+          {/* Disponibilidad */}
+          {infoAdicional?.disponibilidad && (
+            <View style={baseStyles.infoAdicionalRow}>
+              <Text style={baseStyles.infoAdicionalLabel}>Disponibilidad:</Text>
+              <Text style={baseStyles.infoAdicionalValor}>{infoAdicional.disponibilidad}</Text>
+            </View>
+          )}
+
+          {/* Links */}
+          {(personalInfo.github || personalInfo.linkedin) && (
+            <View style={baseStyles.infoAdicionalRow}>
+              <Text style={baseStyles.infoAdicionalLabel}>Portafolio:</Text>
+              <Text style={baseStyles.infoAdicionalValor}>
+                {personalInfo.github && `${personalInfo.github}`}
+                {personalInfo.github && personalInfo.linkedin && ' | '}
+                {personalInfo.linkedin && `LinkedIn: ${personalInfo.linkedin}`}
+              </Text>
+            </View>
+          )}
         </View>
 
       </Page>

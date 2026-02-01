@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Icon from '../Icon';
 
 const Step1Profile = ({ data, onChange }) => {
+  const fileInputRef = useRef(null);
+
   const updatePersonalInfo = (field, value) => {
     onChange({
       ...data,
@@ -11,6 +13,36 @@ const Step1Profile = ({ data, onChange }) => {
 
   const updateResumen = (value) => {
     onChange({ ...data, resumenProfesional: value });
+  };
+
+  // Manejar subida de foto
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validar tipo de archivo
+      if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona una imagen (JPG, PNG)');
+        return;
+      }
+      // Validar tamaño (máx 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('La imagen debe ser menor a 2MB');
+        return;
+      }
+      // Convertir a base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updatePersonalInfo('foto', reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removePhoto = () => {
+    updatePersonalInfo('foto', null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -26,6 +58,48 @@ const Step1Profile = ({ data, onChange }) => {
       </div>
 
       <div className="form-card">
+        {/* Sección de foto de perfil */}
+        <div className="photo-upload-section">
+          <div className="photo-preview-container">
+            {data.personalInfo.foto ? (
+              <div className="photo-preview">
+                <img src={data.personalInfo.foto} alt="Foto de perfil" />
+                <button 
+                  type="button" 
+                  className="photo-remove-btn"
+                  onClick={removePhoto}
+                  title="Eliminar foto"
+                >
+                  <Icon name="x" size={14} />
+                </button>
+              </div>
+            ) : (
+              <div 
+                className="photo-placeholder"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Icon name="camera" size={32} />
+                <span>Agregar foto</span>
+              </div>
+            )}
+          </div>
+          <div className="photo-upload-info">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/jpg"
+              onChange={handlePhotoUpload}
+              style={{ display: 'none' }}
+              id="photo-input"
+            />
+            <label htmlFor="photo-input" className="btn-upload-photo">
+              <Icon name="upload" size={16} />
+              {data.personalInfo.foto ? 'Cambiar foto' : 'Subir foto'}
+            </label>
+            <p className="photo-hint">JPG o PNG. Máximo 2MB. (Opcional)</p>
+          </div>
+        </div>
+
         <div className="form-grid-2col">
           <div className="form-group">
             <label>Nombre completo <span className="required">*</span></label>

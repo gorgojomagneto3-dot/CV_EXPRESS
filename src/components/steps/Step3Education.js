@@ -48,6 +48,33 @@ const Step3Education = ({ data, onChange }) => {
     }
   };
 
+  // Proyectos Adicionales
+  const updateProyecto = (index, field, value) => {
+    const newProyectos = [...(data.proyectos || [])];
+    newProyectos[index] = { ...newProyectos[index], [field]: value };
+    onChange({ ...data, proyectos: newProyectos });
+  };
+
+  const addProyecto = () => {
+    const currentProyectos = data.proyectos || [];
+    onChange({
+      ...data,
+      proyectos: [...currentProyectos, {
+        nombre: "",
+        descripcion: "",
+        tecnologias: ""
+      }]
+    });
+  };
+
+  const removeProyecto = (index) => {
+    const currentProyectos = data.proyectos || [];
+    if (currentProyectos.length > 1) {
+      const newProyectos = currentProyectos.filter((_, i) => i !== index);
+      onChange({ ...data, proyectos: newProyectos });
+    }
+  };
+
   // Habilidades
   const updateHabilidades = (tipo, value) => {
     const skills = value.split(',').map(s => s.trim()).filter(s => s);
@@ -279,11 +306,29 @@ const Step3Education = ({ data, onChange }) => {
                     type="text"
                     value={edu.fechaFin}
                     onChange={(e) => updateEducacion(index, 'fechaFin', e.target.value)}
-                    placeholder="2021"
+                    placeholder="2021 o Presente"
                     className="input-modern with-icon"
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Campo nuevo: Cursos Relevantes */}
+            <div className="form-group">
+              <label>Cursos relevantes (opcional)</label>
+              <div className="input-with-icon">
+                <span className="input-icon">
+                  <Icon name="book-open" size={16} />
+                </span>
+                <input
+                  type="text"
+                  value={edu.cursosRelevantes || ''}
+                  onChange={(e) => updateEducacion(index, 'cursosRelevantes', e.target.value)}
+                  placeholder="Ej: POO, Bases de Datos, Ingeniería de Software, Estructuras de Datos"
+                  className="input-modern with-icon"
+                />
+              </div>
+              <p className="field-hint">Separa los cursos con comas. Esto destaca en CVs de practicantes.</p>
             </div>
           </div>
         ))}
@@ -531,6 +576,87 @@ const Step3Education = ({ data, onChange }) => {
 
         <button type="button" className="btn-add-item compact" onClick={addIdioma}>
           <span>+</span> Agregar idioma
+        </button>
+      </div>
+
+      {/* PROYECTOS ADICIONALES - Nueva sección */}
+      <div className="step-section">
+        <div className="step-header">
+          <h2>
+            <span className="step-title-icon">
+              <Icon name="code" size={18} />
+            </span>
+            Proyectos Adicionales
+          </h2>
+          <p className="step-description">Ideal para practicantes y juniors. Muestra tus proyectos personales o académicos.</p>
+        </div>
+
+        <div className="projects-list">
+          {(data.proyectos || []).map((proy, index) => (
+            <div key={index} className="project-card">
+              <div className="card-header-with-actions">
+                <div className="card-number">{index + 1}</div>
+                <h3>Proyecto {index + 1}</h3>
+                {(data.proyectos || []).length > 1 && (
+                  <button
+                    type="button"
+                    className="btn-remove-card"
+                    onClick={() => removeProyecto(index)}
+                  >
+                    <Icon name="x" size={14} />
+                  </button>
+                )}
+              </div>
+
+              <div className="form-grid-2col">
+                <div className="form-group">
+                  <label>Nombre del proyecto <span className="required">*</span></label>
+                  <div className="input-with-icon">
+                    <span className="input-icon">
+                      <Icon name="code" size={16} />
+                    </span>
+                    <input
+                      type="text"
+                      value={proy.nombre}
+                      onChange={(e) => updateProyecto(index, 'nombre', e.target.value)}
+                      placeholder="Ej: Sistema de Facturación"
+                      className="input-modern with-icon"
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Tecnologías usadas</label>
+                  <div className="input-with-icon">
+                    <span className="input-icon">
+                      <Icon name="zap" size={16} />
+                    </span>
+                    <input
+                      type="text"
+                      value={proy.tecnologias || ''}
+                      onChange={(e) => updateProyecto(index, 'tecnologias', e.target.value)}
+                      placeholder="React, Node.js, PostgreSQL"
+                      className="input-modern with-icon"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Descripción breve</label>
+                <input
+                  type="text"
+                  value={proy.descripcion || ''}
+                  onChange={(e) => updateProyecto(index, 'descripcion', e.target.value)}
+                  placeholder="Ej: Sistema de gestión para restaurantes con carta digital QR y pedidos en tiempo real"
+                  className="input-modern"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button type="button" className="btn-add-item compact" onClick={addProyecto}>
+          <span>+</span> Agregar proyecto
         </button>
       </div>
 
