@@ -261,13 +261,13 @@ const CVDocument = ({ data, template = 'classic' }) => {
 
   const s = (base, dynamic) => [base, dynamic];
 
-  // Construir línea de contacto
+  // Construir línea de contacto (sin emojis para mejor compatibilidad PDF)
   const contactItems = [
-    personalInfo.email && `📧 ${personalInfo.email}`,
-    personalInfo.telefono && `📱 ${personalInfo.telefono}`,
-    personalInfo.github && `🌐 ${personalInfo.github}`,
-    personalInfo.linkedin && `💼 ${personalInfo.linkedin}`,
-    personalInfo.ubicacion && `📍 ${personalInfo.ubicacion}`,
+    personalInfo.email,
+    personalInfo.telefono && `+51 ${personalInfo.telefono}`,
+    personalInfo.github,
+    personalInfo.linkedin,
+    personalInfo.ubicacion,
   ].filter(Boolean);
 
   return (
