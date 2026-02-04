@@ -36,6 +36,10 @@ function CVBuilder() {
   const [previewZoom, setPreviewZoom] = useState(100);
   const [previewData, setPreviewData] = useState(defaultData);
 
+  useEffect(() => {
+    setIsPaid(user?.isPremium || false);
+  }, [user]);
+
   const handleDataChange = (newData) => {
     setCvData(newData);
   };
@@ -345,6 +349,13 @@ function CVBuilder() {
 // Main App with Auth
 function App() {
   const { isAuthenticated, isLoading } = useAuth();
+
+  // BYPASS TEMPORAL - Acceso sin login para desarrollo
+  const bypassLogin = process.env.REACT_APP_BYPASS_LOGIN === 'true';
+  
+  if (bypassLogin) {
+    return <CVBuilder />;
+  }
 
   if (isLoading) {
     return (

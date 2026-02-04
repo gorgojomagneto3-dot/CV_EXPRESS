@@ -11,10 +11,33 @@ const PaymentModal = ({ isOpen, onClose, onConfirm, amount = "0.50", userId }) =
 
   const phoneNumber = '944507095';
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(phoneNumber);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = async () => {
+    try {
+      if (navigator?.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(phoneNumber);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        return;
+      }
+    } catch (error) {
+      console.error('Error copiando al portapapeles:', error);
+    }
+
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = phoneNumber;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Error copiando al portapapeles (fallback):', error);
+    }
   };
 
   if (!isOpen) return null;

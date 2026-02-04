@@ -270,6 +270,10 @@ const CVDocument = ({ data, template = 'classic' }) => {
     personalInfo.ubicacion,
   ].filter(Boolean);
 
+  const hasExperiencia = Array.isArray(experiencia) && experiencia.some((exp) => exp.puesto || exp.empresa);
+  const hasProyectos = Array.isArray(proyectos) && proyectos.some((proy) => proy.nombre || proy.descripcion);
+  const hasCertificaciones = Array.isArray(certificaciones) && certificaciones.some((cert) => cert.nombre || cert.institucion || cert.fecha);
+
   return (
     <Document>
       <Page size="A4" style={baseStyles.page}>
@@ -321,7 +325,7 @@ const CVDocument = ({ data, template = 'classic' }) => {
         )}
 
         {/* EXPERIENCIA EN PROYECTOS / LABORAL */}
-        {experiencia && experiencia.length > 0 && experiencia[0].puesto && (
+        {hasExperiencia && (
           <View style={baseStyles.seccion}>
             <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>
               EXPERIENCIA {proyectos && proyectos.length > 0 ? 'EN PROYECTOS' : 'LABORAL'}
@@ -434,7 +438,7 @@ const CVDocument = ({ data, template = 'classic' }) => {
         )}
 
         {/* CERTIFICACIONES */}
-        {certificaciones && certificaciones.length > 0 && certificaciones[0].nombre && (
+        {hasCertificaciones && (
           <View style={baseStyles.seccion}>
             <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>CERTIFICACIONES</Text>
             {certificaciones.map((cert, index) => (
@@ -448,7 +452,7 @@ const CVDocument = ({ data, template = 'classic' }) => {
         )}
 
         {/* PROYECTOS ADICIONALES */}
-        {proyectos && proyectos.length > 0 && proyectos[0].nombre && (
+        {hasProyectos && (
           <View style={baseStyles.seccion}>
             <Text style={s(baseStyles.seccionTitulo, dynamicStyles.seccionTitulo)}>PROYECTOS ADICIONALES</Text>
             {proyectos.map((proy, index) => (
